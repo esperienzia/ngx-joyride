@@ -6,4 +6,4 @@ build
 tmp
 TODO
 *.tgz
-idea/
+.idea/
