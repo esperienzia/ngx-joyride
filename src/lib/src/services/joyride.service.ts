@@ -15,8 +15,8 @@ export class JoyrideService {
 
     constructor(
         @Inject(PLATFORM_ID) private platformId: Object,
-        private readonly stepService: JoyrideStepService,
-        private readonly optionsService: JoyrideOptionsService
+        public stepService: JoyrideStepService,
+        public optionsService: JoyrideOptionsService
     ) { }
 
     startTour(options?: JoyrideOptions): Observable<JoyrideStepInfo> {
