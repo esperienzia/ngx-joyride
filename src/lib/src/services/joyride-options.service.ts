@@ -12,7 +12,7 @@ export class JoyrideOptionsService {
     private logsEnabled: boolean = true;
     private showCounter: boolean = true;
     private showPrevButton: boolean = true;
-    private stepsOrder: string[] = [];
+    public stepsOrder: string[] = [];
     setOptions(options: JoyrideOptions) {
         this.stepsOrder = options.steps;
         this.stepDefaultPosition = options.stepDefaultPosition ? options.stepDefaultPosition : this.stepDefaultPosition;

@@ -41,7 +41,7 @@ export class JoyrideStepService implements IJoyrideStepService {
         private readonly documentService: DocumentService,
         private readonly DOMService: DomRefService,
         private readonly stepDrawerService: StepDrawerService,
-        private readonly optionsService: JoyrideOptionsService,
+        public optionsService: JoyrideOptionsService,
         private readonly router: Router
     ) {
         this.initViewportPositions();
