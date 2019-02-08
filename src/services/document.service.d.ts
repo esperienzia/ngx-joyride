@@ -11,6 +11,9 @@ export declare class DocumentService {
     setDocumentHeight(): void;
     getDocumentHeight(): number;
     getFirstScrollableParent(node: any): any;
+    getElementsFromPoint(x: number, y: number): void;
+    isElementBeyondOthers(elementRef: ElementRef, isElementFixed: boolean, keywordToDiscard: string): boolean;
     private calculateDocumentHeight;
     private getScrollOffsets;
+    private getFirstElementWithoutKeyword;
 }

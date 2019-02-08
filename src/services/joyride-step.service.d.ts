@@ -55,4 +55,5 @@ export declare class JoyrideStepService implements IJoyrideStepService {
     private scrollWhenTargetOrStepAreHiddenTop;
     private getMaxTargetAndStepBottomPosition;
     private getMaxTargetAndStepTopPosition;
+    private scrollIfElementBeyondOtherElements;
 }
