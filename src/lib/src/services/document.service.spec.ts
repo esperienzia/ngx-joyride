@@ -8,14 +8,15 @@ import { FakeElementRef } from '../test/fake/dom-elements-fake.class';
 describe('DocumentService', () => {
     let documentService: DocumentService;
     let domRefService: DomRefServiceFake;
-    const getFakeDocument = (compatMode: string) => {
+    const getFakeDocument = (compatMode: string = undefined) => {
         return {
             compatMode,
             documentElement: {
                 scrollTop: 10,
                 scrollLeft: 30
             },
-            body: { scrollTop: 5, scrollLeft: 5 }
+            body: { scrollTop: 5, scrollLeft: 5 },
+            elementsFromPoint: jasmine.createSpy('elementsFromPoint')
         };
     };
 
@@ -433,6 +434,96 @@ describe('DocumentService', () => {
                 };
                 const node = documentService.getFirstScrollableParent(element.nativeElement);
                 expect(node).toEqual(jasmine.objectContaining({ theBody: 2 }));
+            });
+        });
+
+        describe('isElementBeyondOthers', () => {
+            const fakeDoc = getFakeDocument();
+            const target = new FakeElementRef();
+
+            const backdropElement = new FakeElementRef();
+            const element2 = new FakeElementRef();
+            const element3 = new FakeElementRef();
+
+            target.nativeElement.classList = 'targetClass';
+            backdropElement.nativeElement.classList = 'backdrop html class1';
+            element2.nativeElement.classList = 'div2 class1';
+            element3.nativeElement.classList = 'div3';
+
+            target.nativeElement.title = 'div1';
+
+            it('should return true if the element when elementsFromPoint does NOT return the element as first (top and bottom of the elment)', () => {
+                fakeDoc.elementsFromPoint.and.returnValue([element3.nativeElement, target.nativeElement, backdropElement.nativeElement]);
+                domRefService.getNativeDocument.and.returnValue(fakeDoc);
+
+                const result = documentService.isElementBeyondOthers(target, false, 'backdrop');
+
+                expect(result).toBe(true);
+            });
+
+            it('should return true if the element when elementsFromPoint does NOT return the element as first (top of the element)', () => {
+                fakeDoc.elementsFromPoint.and.returnValues(
+                    [element2.nativeElement, target.nativeElement, element3.nativeElement],
+                    [target.nativeElement, element2.nativeElement, element2.nativeElement]
+                );
+                domRefService.getNativeDocument.and.returnValue(fakeDoc);
+
+                const result = documentService.isElementBeyondOthers(target, false, 'backdrop');
+
+                expect(result).toBe(true);
+            });
+
+            it('should return true if the element when elementsFromPoint does NOT return the element as first (bottom of the element)', () => {
+                fakeDoc.elementsFromPoint.and.returnValues(
+                    [target.nativeElement, element2.nativeElement, element2.nativeElement],
+                    [element2.nativeElement, target.nativeElement, element2.nativeElement]
+                );
+                domRefService.getNativeDocument.and.returnValue(fakeDoc);
+
+                const result = documentService.isElementBeyondOthers(target, false, 'backdrop');
+
+                expect(result).toBe(true);
+            });
+
+            it('should return true if the element when elementsFromPoint does NOT return the element as first', () => {
+                fakeDoc.elementsFromPoint.and.returnValue([element2.nativeElement, target.nativeElement, element2.nativeElement]);
+                domRefService.getNativeDocument.and.returnValue(fakeDoc);
+
+                const result = documentService.isElementBeyondOthers(target, false, 'backdrop');
+
+                expect(result).toBe(true);
+            });
+
+            it('should return false if the the element when elementsFromPoint returns []', () => {
+                fakeDoc.elementsFromPoint.and.returnValue([]);
+                domRefService.getNativeDocument.and.returnValue(fakeDoc);
+
+                const result = documentService.isElementBeyondOthers(target, false, 'backdrop');
+
+                expect(result).toBe(true);
+            });
+
+            it('should return false if the element when elementsFromPoint returns the element as first', () => {
+                fakeDoc.elementsFromPoint.and.returnValue([target.nativeElement, element2.nativeElement]);
+                domRefService.getNativeDocument.and.returnValue(fakeDoc);
+
+                const result = documentService.isElementBeyondOthers(target, false, 'backdrop');
+
+                expect(result).toBe(false);
+            });
+
+            it('should return false if the element when elementsFromPoint returns the backdrop as first and then the target element', () => {
+                fakeDoc.elementsFromPoint.and.returnValue([
+                    backdropElement.nativeElement,
+                    backdropElement.nativeElement,
+                    target.nativeElement,
+                    element2.nativeElement
+                ]);
+                domRefService.getNativeDocument.and.returnValue(fakeDoc);
+
+                const result = documentService.isElementBeyondOthers(target, false, 'backdrop');
+
+                expect(result).toBe(false);
             });
         });
     });

@@ -56,6 +56,25 @@ export class DocumentService {
         return scrollparent(node);
     }
 
+    getElementsFromPoint(x: number, y: number) {
+        this.DOMService.getNativeDocument().elementsFromPoint(x, y);
+    }
+
+    isElementBeyondOthers(elementRef: ElementRef, isElementFixed: boolean, keywordToDiscard: string) {
+        const x1 = isElementFixed ? this.getElementFixedLeft(elementRef) : this.getElementAbsoluteLeft(elementRef);
+        const y1 = isElementFixed ? this.getElementFixedTop(elementRef) : this.getElementAbsoluteTop(elementRef);
+        const x2 = x1 + elementRef.nativeElement.getBoundingClientRect().width - 1;
+        const y2 = y1 + elementRef.nativeElement.getBoundingClientRect().height - 1;
+
+        const elements1 = this.DOMService.getNativeDocument().elementsFromPoint(x1, y1);
+        const elements2 = this.DOMService.getNativeDocument().elementsFromPoint(x2, y2);
+
+        return (
+            this.getFirstElementWithoutKeyword(elements1, keywordToDiscard) !== elementRef.nativeElement ||
+            this.getFirstElementWithoutKeyword(elements2, keywordToDiscard) !== elementRef.nativeElement
+        );
+    }
+
     private calculateDocumentHeight() {
         const documentRef = this.DOMService.getNativeDocument();
         return Math.max(
@@ -84,5 +103,12 @@ export class DocumentService {
 
         // For browsers in Quirks mode
         return { x: docReference.body.scrollLeft, y: docReference.body.scrollTop };
+    }
+
+    private getFirstElementWithoutKeyword(elements: Element[], keyword: string): Element {
+        while (elements[0] && elements[0].classList.toString().includes(keyword)) {
+            elements.shift();
+        }
+        return elements[0];
     }
 }
