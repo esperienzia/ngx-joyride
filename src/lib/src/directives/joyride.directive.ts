@@ -58,6 +58,9 @@ export class JoyrideDirective implements AfterViewInit {
     @Input()
     counterTemplate?: TemplateRef<any>;
 
+    @Input()
+    delayEmitter?: EventEmitter<any>;
+
     @Output()
     prev?: EventEmitter<any> = new EventEmitter<any>();
 
@@ -102,7 +105,6 @@ export class JoyrideDirective implements AfterViewInit {
         step.isElementOrAncestorFixed =
             this.isElementFixed(this.viewContainerRef.element) ||
             this.isAncestorsFixed(this.viewContainerRef.element.nativeElement.parentElement);
-
         this.joyrideStepsContainer.addStep(step);
     }
 

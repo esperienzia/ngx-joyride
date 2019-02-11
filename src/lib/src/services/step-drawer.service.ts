@@ -1,6 +1,13 @@
-import { Injectable, ComponentRef, ComponentFactoryResolver, ApplicationRef, Injector, EmbeddedViewRef } from '@angular/core';
-import { JoyrideStepComponent } from "../components/step/joyride-step.component";
-import { JoyrideStep } from '../models/joyride-step.class';
+import {
+    Injectable,
+    ComponentRef,
+    ComponentFactoryResolver,
+    ApplicationRef,
+    Injector,
+    EmbeddedViewRef
+} from '@angular/core';
+import {JoyrideStepComponent} from "../components/step/joyride-step.component";
+import {JoyrideStep} from '../models/joyride-step.class';
 
 @Injectable()
 export class StepDrawerService {
@@ -11,7 +18,8 @@ export class StepDrawerService {
         private readonly componentFactoryResolver: ComponentFactoryResolver,
         private appRef: ApplicationRef,
         private injector: Injector
-    ) { }
+    ) {
+    }
 
     draw(step: JoyrideStep) {
 
@@ -27,6 +35,19 @@ export class StepDrawerService {
         const domElem = (ref.hostView as EmbeddedViewRef<any>)
             .rootNodes[0] as HTMLElement;
 
+        if (step.delayEmitter){
+            step.delayEmitter.subscribe(() => {
+                domElem.hidden = false;
+            });
+        }
+        if (step.startsHidden){
+            domElem.hidden = true;
+        }else {
+            if (step.delayEmitter){
+                step.delayEmitter.unsubscribe();
+            }
+        }
+
         // 4. Append DOM element to the body
         document.body.appendChild(domElem);
 
@@ -41,6 +62,9 @@ export class StepDrawerService {
 
     remove(step: JoyrideStep) {
         this.appRef.detachView(this.refMap[step.name].hostView);
+        if (step.delayEmitter){
+            step.delayEmitter.unsubscribe();
+        }
         this.refMap[step.name].destroy();
     }
 

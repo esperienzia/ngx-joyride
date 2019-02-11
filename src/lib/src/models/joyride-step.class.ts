@@ -17,4 +17,6 @@ export class JoyrideStep {
     isElementOrAncestorFixed: boolean;
     targetViewContainer: ViewContainerRef;
     stepInstance: JoyrideStepComponent;
+    delayEmitter?: EventEmitter<any>;
+    startsHidden = false;
 }
