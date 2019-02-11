@@ -1,16 +1,16 @@
-import { Injectable } from '@angular/core';
-import { JoyrideStep } from '../models/joyride-step.class';
-import { JoyrideBackdropService } from './joyride-backdrop.service';
-import { EventListenerService } from './event-listener.service';
-import { JoyrideStepsContainerService } from './joyride-steps-container.service';
-import { DocumentService } from './document.service';
-import { StepDrawerService } from './step-drawer.service';
-import { DomRefService } from './dom.service';
-import { NO_POSITION } from '../directives/joyride.directive';
-import { JoyrideOptionsService } from './joyride-options.service';
-import { Router } from '@angular/router';
-import { ReplaySubject, Observable } from 'rxjs';
-import { JoyrideStepInfo } from '../models/joyride-step-info.class';
+import {Injectable} from '@angular/core';
+import {JoyrideStep} from '../models/joyride-step.class';
+import {JoyrideBackdropService} from './joyride-backdrop.service';
+import {EventListenerService} from './event-listener.service';
+import {JoyrideStepsContainerService} from './joyride-steps-container.service';
+import {DocumentService} from './document.service';
+import {StepDrawerService} from './step-drawer.service';
+import {DomRefService} from './dom.service';
+import {NO_POSITION} from '../directives/joyride.directive';
+import {JoyrideOptionsService} from './joyride-options.service';
+import {Router} from '@angular/router';
+import {ReplaySubject, Observable} from 'rxjs';
+import {JoyrideStepInfo} from '../models/joyride-step-info.class';
 
 const SCROLLBAR_SIZE = 20;
 export const DISTANCE_FROM_TARGET = 15;
@@ -18,10 +18,15 @@ export const ARROW_SIZE = 10;
 
 export interface IJoyrideStepService {
     startTour(): Observable<JoyrideStepInfo>;
+
     close(): any;
+
     prev(): any;
+
     next(): any;
+
     isFirstStep(): boolean;
+
     isLastStep(): boolean;
 }
 
@@ -133,10 +138,12 @@ export class JoyrideStepService implements IJoyrideStepService {
     }
 
     private showStep(action: 'PREV' | 'NEXT') {
-        this.stepsContainerService.initSteps();
-        this.currentStep = this.stepsContainerService.get(this.currentStepIndex);
-        if (action === 'NEXT' && this.currentStep.delayEmitter){
-            this.currentStep.delayEmitter.subscribe( () => {
+        setTimeout(() => {
+            this.stepsContainerService.initSteps();
+            this.currentStep = this.stepsContainerService.get(this.currentStepIndex);
+        }, 1);
+        if (action === 'NEXT' && this.currentStep.delayEmitter) {
+            this.currentStep.delayEmitter.subscribe(() => {
                 // Scroll the element to get it visible if it's in a scrollable element
                 if (this.isParentScrollable(this.currentStep.targetViewContainer.element.nativeElement)) {
                     this.currentStep.targetViewContainer.element.nativeElement.scrollIntoView();
@@ -147,8 +154,7 @@ export class JoyrideStepService implements IJoyrideStepService {
                 this.scrollIfStepAndTargetAreNotVisible();
                 this.notifyStepClicked(action);
             });
-        }
-        else {
+        } else {
             setTimeout(() => {
                 // Scroll the element to get it visible if it's in a scrollable element
                 if (this.isParentScrollable(this.currentStep.targetViewContainer.element.nativeElement)) {
