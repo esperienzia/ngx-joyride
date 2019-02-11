@@ -133,10 +133,10 @@ export class JoyrideStepService implements IJoyrideStepService {
     }
 
     private showStep(action: 'PREV' | 'NEXT') {
+        this.stepsContainerService.initSteps();
+        this.currentStep = this.stepsContainerService.get(this.currentStepIndex);
         if (action === 'NEXT' && this.currentStep.delayEmitter){
             this.currentStep.delayEmitter.subscribe( () => {
-                this.stepsContainerService.initSteps();
-                this.currentStep = this.stepsContainerService.get(this.currentStepIndex);
                 // Scroll the element to get it visible if it's in a scrollable element
                 if (this.isParentScrollable(this.currentStep.targetViewContainer.element.nativeElement)) {
                     this.currentStep.targetViewContainer.element.nativeElement.scrollIntoView();
@@ -150,8 +150,6 @@ export class JoyrideStepService implements IJoyrideStepService {
         }
         else {
             setTimeout(() => {
-                this.stepsContainerService.initSteps();
-                this.currentStep = this.stepsContainerService.get(this.currentStepIndex);
                 // Scroll the element to get it visible if it's in a scrollable element
                 if (this.isParentScrollable(this.currentStep.targetViewContainer.element.nativeElement)) {
                     this.currentStep.targetViewContainer.element.nativeElement.scrollIntoView();
