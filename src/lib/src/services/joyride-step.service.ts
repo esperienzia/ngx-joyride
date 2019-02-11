@@ -133,19 +133,37 @@ export class JoyrideStepService implements IJoyrideStepService {
     }
 
     private showStep(action: 'PREV' | 'NEXT') {
-        setTimeout(() => {
-            this.stepsContainerService.initSteps();
-            this.currentStep = this.stepsContainerService.get(this.currentStepIndex);
-            // Scroll the element to get it visible if it's in a scrollable element
-            if (this.isParentScrollable(this.currentStep.targetViewContainer.element.nativeElement)) {
-                this.currentStep.targetViewContainer.element.nativeElement.scrollIntoView();
-            }
-            this.scrollIfElementBeyondOtherElements();
-            this.backDropService.draw(this.currentStep);
-            this.drawStep(this.currentStep);
-            this.scrollIfStepAndTargetAreNotVisible();
-            this.notifyStepClicked(action);
-        }, 1);
+        if (action === 'NEXT' && this.currentStep.delayEmitter){
+            this.currentStep.delayEmitter.subscribe( () => {
+                this.stepsContainerService.initSteps();
+                this.currentStep = this.stepsContainerService.get(this.currentStepIndex);
+                // Scroll the element to get it visible if it's in a scrollable element
+                if (this.isParentScrollable(this.currentStep.targetViewContainer.element.nativeElement)) {
+                    this.currentStep.targetViewContainer.element.nativeElement.scrollIntoView();
+                }
+                this.scrollIfElementBeyondOtherElements();
+                this.backDropService.draw(this.currentStep);
+                this.drawStep(this.currentStep);
+                this.scrollIfStepAndTargetAreNotVisible();
+                this.notifyStepClicked(action);
+            });
+        }
+        else {
+            setTimeout(() => {
+                this.stepsContainerService.initSteps();
+                this.currentStep = this.stepsContainerService.get(this.currentStepIndex);
+                // Scroll the element to get it visible if it's in a scrollable element
+                if (this.isParentScrollable(this.currentStep.targetViewContainer.element.nativeElement)) {
+                    this.currentStep.targetViewContainer.element.nativeElement.scrollIntoView();
+                }
+                this.scrollIfElementBeyondOtherElements();
+                this.backDropService.draw(this.currentStep);
+                this.drawStep(this.currentStep);
+                this.scrollIfStepAndTargetAreNotVisible();
+                this.notifyStepClicked(action);
+            }, 1);
+        }
+
     }
 
     private notifyStepClicked(action: 'PREV' | 'NEXT') {
