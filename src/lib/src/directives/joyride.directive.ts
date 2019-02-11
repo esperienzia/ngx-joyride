@@ -59,6 +59,9 @@ export class JoyrideDirective implements AfterViewInit {
     counterTemplate?: TemplateRef<any>;
 
     @Input()
+    startsHidden?: boolean;
+
+    @Input()
     delayEmitter?: EventEmitter<any>;
 
     @Output()
