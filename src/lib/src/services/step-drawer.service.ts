@@ -43,9 +43,9 @@ export class StepDrawerService {
         if (step.startsHidden){
             domElem.setAttribute("style","visibility: hidden");
         }else {
-            if (step.delayEmitter){
+            /*if (step.delayEmitter){
                 step.delayEmitter.unsubscribe();
-            }
+            }*/
         }
 
         // 4. Append DOM element to the body
@@ -62,9 +62,9 @@ export class StepDrawerService {
 
     remove(step: JoyrideStep) {
         this.appRef.detachView(this.refMap[step.name].hostView);
-        if (step.delayEmitter){
+        /*if (step.delayEmitter){
             step.delayEmitter.unsubscribe();
-        }
+        }*/
         this.refMap[step.name].destroy();
     }
 
