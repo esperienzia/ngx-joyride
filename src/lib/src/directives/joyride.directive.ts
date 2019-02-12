@@ -108,6 +108,8 @@ export class JoyrideDirective implements AfterViewInit {
         step.isElementOrAncestorFixed =
             this.isElementFixed(this.viewContainerRef.element) ||
             this.isAncestorsFixed(this.viewContainerRef.element.nativeElement.parentElement);
+        step.delayEmitter = this.delayEmitter;
+        step.startsHidden = this.startsHidden;
         this.joyrideStepsContainer.addStep(step);
     }
 
