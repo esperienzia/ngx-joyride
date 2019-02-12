@@ -37,11 +37,11 @@ export class StepDrawerService {
 
         if (step.delayEmitter){
             step.delayEmitter.subscribe(() => {
-                domElem.setAttribute("style","visiblity: visible");
+                domElem.setAttribute("style","visibility: visible");
             });
         }
         if (step.startsHidden){
-            domElem.setAttribute("style","visiblity: hidden");
+            domElem.setAttribute("style","visibility: hidden");
         }else {
             if (step.delayEmitter){
                 step.delayEmitter.unsubscribe();
