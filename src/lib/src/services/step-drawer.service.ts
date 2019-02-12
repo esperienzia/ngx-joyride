@@ -35,17 +35,25 @@ export class StepDrawerService {
         const domElem = (ref.hostView as EmbeddedViewRef<any>)
             .rootNodes[0] as HTMLElement;
 
-        if (step.delayEmitter){
+        if (step.delayEmitter) {
             step.delayEmitter.subscribe(() => {
-                domElem.setAttribute("style","visibility: visible");
+                if (step.startsHidden) {
+                    domElem.hidden = false;
+                    setTimeout(() => {
+                        if (step.startsInvisible) {
+                            domElem.setAttribute("style", "visibility: visible");
+                        }
+                    }, 500);
+                } else {
+                    domElem.setAttribute("style", "visibility: visible");
+                }
             });
         }
-        if (step.startsHidden){
-            domElem.setAttribute("style","visibility: hidden");
-        }else {
-            /*if (step.delayEmitter){
-                step.delayEmitter.unsubscribe();
-            }*/
+        if (step.startsInvisible) {
+            domElem.setAttribute("style", "visibility: hidden");
+        }
+        if (step.startsHidden) {
+            domElem.hidden = true;
         }
 
         // 4. Append DOM element to the body
@@ -62,9 +70,6 @@ export class StepDrawerService {
 
     remove(step: JoyrideStep) {
         this.appRef.detachView(this.refMap[step.name].hostView);
-        /*if (step.delayEmitter){
-            step.delayEmitter.unsubscribe();
-        }*/
         this.refMap[step.name].destroy();
     }
 

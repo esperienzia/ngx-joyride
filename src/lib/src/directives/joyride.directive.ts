@@ -62,6 +62,9 @@ export class JoyrideDirective implements AfterViewInit {
     startsHidden?: boolean;
 
     @Input()
+    startsInvisible?: boolean;
+
+    @Input()
     delayEmitter?: EventEmitter<any>;
 
     @Output()
@@ -110,6 +113,7 @@ export class JoyrideDirective implements AfterViewInit {
             this.isAncestorsFixed(this.viewContainerRef.element.nativeElement.parentElement);
         step.delayEmitter = this.delayEmitter;
         step.startsHidden = this.startsHidden;
+        step.startsInvisible = this.startsHidden ? true : this.startsInvisible;
         this.joyrideStepsContainer.addStep(step);
     }
 

@@ -18,5 +18,6 @@ export class JoyrideStep {
     targetViewContainer: ViewContainerRef;
     stepInstance: JoyrideStepComponent;
     delayEmitter?: EventEmitter<any>;
-    startsHidden = false;
+    startsHidden = false; // the step is not rendered
+    startsInvisible = false; // the step is rendered but hidden to the user
 }
