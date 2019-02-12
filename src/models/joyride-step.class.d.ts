@@ -18,4 +18,5 @@ export declare class JoyrideStep {
     stepInstance: JoyrideStepComponent;
     delayEmitter?: EventEmitter<any>;
     startsHidden: boolean;
+    startsInvisible: boolean;
 }
