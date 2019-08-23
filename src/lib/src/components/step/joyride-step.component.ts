@@ -75,8 +75,8 @@ export class JoyrideStepComponent implements OnInit, OnDestroy, AfterViewInit {
     private documentHeight: number;
 
     @Input() step?: JoyrideStep;
-    @ViewChild('stepHolder') stepHolder: ElementRef;
-    @ViewChild('stepContainer') stepContainer: ElementRef;
+    @ViewChild('stepHolder', {static: true}) stepHolder: ElementRef;
+    @ViewChild('stepContainer', {static: true}) stepContainer: ElementRef;
 
     constructor(
         private injector: Injector,
