@@ -1,11 +1,11 @@
-import { AfterViewInit, ViewContainerRef, TemplateRef, EventEmitter } from '@angular/core';
+import { AfterViewInit, ViewContainerRef, TemplateRef, EventEmitter, OnChanges, SimpleChanges, OnDestroy } from '@angular/core';
 import { JoyrideStepsContainerService } from '../services/joyride-steps-container.service';
 import { Router } from '@angular/router';
 import { DomRefService } from '../services/dom.service';
 import { TemplatesService } from '../services/templates.service';
 import { Observable } from 'rxjs';
 export declare const NO_POSITION = "NO_POSITION";
-export declare class JoyrideDirective implements AfterViewInit {
+export declare class JoyrideDirective implements AfterViewInit, OnChanges, OnDestroy {
     private readonly joyrideStepsContainer;
     private viewContainerRef;
     private readonly domService;
@@ -30,9 +30,13 @@ export declare class JoyrideDirective implements AfterViewInit {
     next?: EventEmitter<any>;
     done?: EventEmitter<any>;
     private windowRef;
+    private step;
+    private subscriptions;
     constructor(joyrideStepsContainer: JoyrideStepsContainerService, viewContainerRef: ViewContainerRef, domService: DomRefService, router: Router, templateService: TemplatesService, platformId: Object);
     ngAfterViewInit(): void;
+    ngOnChanges(changes: SimpleChanges): void;
     private isElementFixed;
-    private setAsyncText;
+    private setAsyncFields;
     private isAncestorsFixed;
+    ngOnDestroy(): void;
 }

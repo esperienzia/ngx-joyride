@@ -8,6 +8,7 @@ import { JoyrideOptionsService } from './joyride-options.service';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { JoyrideStepInfo } from '../models/joyride-step-info.class';
+import { LoggerService } from './logger.service';
 export declare const DISTANCE_FROM_TARGET = 15;
 export declare const ARROW_SIZE = 10;
 export interface IJoyrideStepService {
@@ -15,8 +16,6 @@ export interface IJoyrideStepService {
     close(): any;
     prev(): any;
     next(): any;
-    isFirstStep(): boolean;
-    isLastStep(): boolean;
 }
 export declare class JoyrideStepService implements IJoyrideStepService {
     private readonly backDropService;
@@ -27,12 +26,12 @@ export declare class JoyrideStepService implements IJoyrideStepService {
     private readonly stepDrawerService;
     optionsService: JoyrideOptionsService;
     private readonly router;
-    private currentStepIndex;
+    private readonly logger;
     private currentStep;
     private winTopPosition;
     private winBottomPosition;
     private stepsObserver;
-    constructor(backDropService: JoyrideBackdropService, eventListener: EventListenerService, stepsContainerService: JoyrideStepsContainerService, documentService: DocumentService, DOMService: DomRefService, stepDrawerService: StepDrawerService, optionsService: JoyrideOptionsService, router: Router);
+    constructor(backDropService: JoyrideBackdropService, eventListener: EventListenerService, stepsContainerService: JoyrideStepsContainerService, documentService: DocumentService, DOMService: DomRefService, stepDrawerService: StepDrawerService, optionsService: JoyrideOptionsService, router: Router, logger: LoggerService);
     private initViewportPositions;
     private subscribeToScrollEvents;
     private subscribeToResizeEvents;
@@ -41,14 +40,12 @@ export declare class JoyrideStepService implements IJoyrideStepService {
     close(): void;
     prev(): void;
     next(): void;
-    isFirstStep(): boolean;
-    isLastStep(): boolean;
     private navigateToStepPage;
     private subscribeToStepsUpdates;
+    private tryShowStep;
     private showStep;
     private notifyStepClicked;
     private notifyTourIsFinished;
-    private isParentScrollable;
     private removeCurrentStep;
     private scrollIfStepAndTargetAreNotVisible;
     private scrollWhenTargetOrStepAreHiddenBottom;
@@ -56,4 +53,5 @@ export declare class JoyrideStepService implements IJoyrideStepService {
     private getMaxTargetAndStepBottomPosition;
     private getMaxTargetAndStepTopPosition;
     private scrollIfElementBeyondOtherElements;
+    private isElementBeyondOthers;
 }

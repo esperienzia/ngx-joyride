@@ -96,6 +96,8 @@ done | No | It fires an event when 'Done' button or 'Close' are clicked and the 
 Name | Required | Purpose | Type | Default value
 ---- | ---- | ---- | ---- | ----
 steps | Yes | Represent the ordered list of steps name to show. e.g `steps: ['step1', 'header', 'interesting-table', 'navbar']`. This option is particularly useful for multi-pages navigation. If your step is not in the root path, you should indicate the route after the step name, with a `@` as separator. E.g. : `steps: ['firstStep', 'image@home', 'step4@about/you', 'user-avatar@user/details']` | string[] | none
+startWith | No | The name of the step (plus the route for multi-page navigation) from which the stour should start. | string | undefined
+waitingTime | No | The time (in milliseconds) to wait before showing the next/prev step. | number | 1
 stepDefaultPosition | No | Define a step default position. The stepPositon set in the directive override this value. | string | bottom
 themeColor | No | Backdrop, buttons and title color. (Hexadecimal value) | string | #3b5560
 showCounter | No | Show the counter on the bottom-left. | boolean | true
@@ -111,6 +113,7 @@ You can change each element step css overriding the default style.
 * [Set the options](#set-the-options)
 * [Listen for events](#listen-for-events)
 * [Multi Pages navigation](#get-multi-pages-navigation)
+* [Close programmatically the tour](#close-programmatically-the-tour)
 
 
 ### Use Custom Content
@@ -127,7 +130,7 @@ If you'd like to pass params to template, use the `stepContentParams` property. 
 ```html
 <div joyrideStep="step1" [stepContent]="customContent" [stepContentParams]="{'name': 'John'}">I'm the target element.</div>
 <ng-template #customContent let-person="name">
-	Hello {{name}}
+	Hello {{person}}
 </ng-template>
  ```
 
@@ -161,7 +164,7 @@ If you'd like to customize the next, prev and done button or you want to use you
 ### Set the options
 ```typescript
 this.joyrideService.startTour({
-    steps: ['step1', 'my-step@home', 'lastStep@home']
+    steps: ['step1', 'my-step@home', 'lastStep@home'],
     showPrevButton: false,
     stepDefaultPosition: 'top',
     themeColor: '#212f23'
@@ -235,6 +238,14 @@ What you should do is adding your steps in this way:
 ...
 ```
 **NB**: If you're using lazy modules, you should import the JoyrideModule in your AppModule using `JoyrideModule.forRoot()`. In your lazy loaded feature modules use `JoyrideModule.forChild()` instead. 
+
+### Close programmatically the tour
+In order to close programmatically the tour you'll just need to call the JoyrideService `closeTour()` method:
+```typescript
+...
+    this.joyrideService.closeTour(); 
+...
+```
 
 ## Licence
 MIT

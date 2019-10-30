@@ -51,6 +51,9 @@ export declare class JoyrideStepComponent implements OnInit, OnDestroy, AfterVie
     joyrideStepService: IJoyrideStepService;
     private positionAlreadyFixed;
     private documentHeight;
+    prevText: Observable<string>;
+    nextText: Observable<string>;
+    doneText: Observable<string>;
     step?: JoyrideStep;
     stepHolder: ElementRef;
     stepContainer: ElementRef;
@@ -59,6 +62,7 @@ export declare class JoyrideStepComponent implements OnInit, OnDestroy, AfterVie
     ngAfterViewInit(): void;
     private checkRedraw;
     private isCustomized;
+    private setCustomTexts;
     private drawStep;
     private getCounter;
     private setCustomTemplates;

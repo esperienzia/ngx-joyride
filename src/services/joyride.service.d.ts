@@ -1,4 +1,4 @@
-import { JoyrideStepService } from "./joyride-step.service";
+import { JoyrideStepService } from './joyride-step.service';
 import { JoyrideOptionsService } from './joyride-options.service';
 import { JoyrideOptions } from '../models/joyride-options.class';
 import { Observable } from 'rxjs';
@@ -11,5 +11,6 @@ export declare class JoyrideService {
     private tour$;
     constructor(platformId: Object, stepService: JoyrideStepService, optionsService: JoyrideOptionsService);
     startTour(options?: JoyrideOptions): Observable<JoyrideStepInfo>;
+    closeTour(): void;
     isTourInProgress(): boolean;
 }
