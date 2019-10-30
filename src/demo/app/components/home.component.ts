@@ -1,16 +1,10 @@
-import {
-    Component,
-    OnInit,
-    AfterViewInit,
-    ChangeDetectionStrategy
-} from '@angular/core';
+import { Component, OnInit, AfterViewInit, ChangeDetectionStrategy } from '@angular/core';
 import { JoyrideService } from 'ngx-joyride';
 
 @Component({
     selector: 'home',
     templateUrl: './home.component.html',
-    styleUrls: ['./home.component.sass'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    styleUrls: ['./home.component.sass']
 })
 export class HomeComponent implements AfterViewInit, OnInit {
     stepVisible: boolean = false;
@@ -18,6 +12,8 @@ export class HomeComponent implements AfterViewInit, OnInit {
     topics = <any>[];
 
     title: string = 'ngx-joyride library demo';
+
+    dynamicTitle: string = 'Title';
     constructor(private readonly joyrideService: JoyrideService) {}
 
     ngAfterViewInit(): void {}
@@ -29,6 +25,9 @@ export class HomeComponent implements AfterViewInit, OnInit {
                 description: 'Element in a scrollable list.'
             });
         }
+        setTimeout(() => {
+            this.dynamicTitle = 'Title Changed';
+        }, 10000);
     }
 
     toggleAction() {
@@ -61,10 +60,13 @@ export class HomeComponent implements AfterViewInit, OnInit {
                 'step3@app',
                 'step2@about/you'
             ],
+            // startWith: 'step3@app',
+            // waitingTime: 3000,
             stepDefaultPosition: 'top',
             themeColor: '#345632',
             showPrevButton: true,
-            logsEnabled: true
+            logsEnabled: true,
+            //customTexts: { prev: of('<<').pipe(delay(2000)), next: '>>'}
         };
         this.joyrideService.startTour(options).subscribe(
             step => {

@@ -1,12 +1,34 @@
 import { Injectable, ElementRef } from '@angular/core';
 import { DomRefService } from './dom.service';
 
+export interface IDocumentService {
+    getElementFixedTop(elementRef: ElementRef): number;
+
+    getElementFixedLeft(elementRef: ElementRef);
+
+    getElementAbsoluteTop(elementRef: ElementRef);
+
+    getElementAbsoluteLeft(elementRef: ElementRef);
+
+    setDocumentHeight();
+
+    getDocumentHeight(): number;
+    isParentScrollable(elementRef: ElementRef): boolean;
+    isElementBeyondOthers(elementRef: ElementRef, isElementFixed: boolean, keywordToDiscard: string): number;
+    scrollToTheTop(elementRef: ElementRef): void;
+    scrollToTheBottom(elementRef: ElementRef): void;
+}
+
 @Injectable()
-export class DocumentService {
+export class DocumentService implements IDocumentService {
     private documentHeight: number;
 
     constructor(private readonly DOMService: DomRefService) {
         this.setDocumentHeight();
+        if (!document.elementsFromPoint) {
+            // IE 11 - Edge browsers
+            document.elementsFromPoint = this.elementsFromPoint.bind(this);
+        }
     }
 
     getElementFixedTop(elementRef: ElementRef) {
@@ -35,7 +57,73 @@ export class DocumentService {
         return this.documentHeight;
     }
 
-    getFirstScrollableParent(node: any) {
+    isParentScrollable(elementRef: ElementRef): boolean {
+        return this.getFirstScrollableParent(elementRef.nativeElement) !== this.DOMService.getNativeDocument().body;
+    }
+
+    isElementBeyondOthers(elementRef: ElementRef, isElementFixed: boolean, keywordToDiscard: string) {
+        const x1 = isElementFixed ? this.getElementFixedLeft(elementRef) : this.getElementAbsoluteLeft(elementRef);
+        const y1 = isElementFixed ? this.getElementFixedTop(elementRef) : this.getElementAbsoluteTop(elementRef);
+        const x2 = x1 + elementRef.nativeElement.getBoundingClientRect().width - 1;
+        const y2 = y1 + elementRef.nativeElement.getBoundingClientRect().height - 1;
+
+        const elements1 = this.DOMService.getNativeDocument().elementsFromPoint(x1, y1);
+        const elements2 = this.DOMService.getNativeDocument().elementsFromPoint(x2, y2);
+
+        if (elements1.length === 0 && elements2.length === 0) return 1;
+        if (
+            this.getFirstElementWithoutKeyword(elements1, keywordToDiscard) !== elementRef.nativeElement ||
+            this.getFirstElementWithoutKeyword(elements2, keywordToDiscard) !== elementRef.nativeElement
+        ) {
+            return 2;
+        }
+        return 3;
+    }
+
+    scrollIntoView(elementRef: ElementRef, isElementFixed: boolean): void {
+        const firstScrollableParent = this.getFirstScrollableParent(elementRef.nativeElement);
+        const top = isElementFixed ? this.getElementFixedTop(elementRef) : this.getElementAbsoluteTop(elementRef);
+        if (firstScrollableParent !== this.DOMService.getNativeDocument().body) {
+            if (firstScrollableParent.scrollTo) {
+                firstScrollableParent.scrollTo(0, top - 150);
+            } else {
+                // IE 11 - Edge browsers
+                firstScrollableParent.scrollTop = top - 150;
+            }
+        } else {
+            this.DOMService.getNativeWindow().scrollTo(0, top - 150);
+        }
+    }
+
+    scrollToTheTop(elementRef: ElementRef): void {
+        const firstScrollableParent = this.getFirstScrollableParent(elementRef.nativeElement);
+        if (firstScrollableParent !== this.DOMService.getNativeDocument().body) {
+            if (firstScrollableParent.scrollTo) {
+                firstScrollableParent.scrollTo(0, 0);
+            } else {
+                // IE 11 - Edge browsers
+                firstScrollableParent.scrollTop = 0;
+            }
+        } else {
+            this.DOMService.getNativeWindow().scrollTo(0, 0);
+        }
+    }
+
+    scrollToTheBottom(elementRef: ElementRef): void {
+        const firstScrollableParent = this.getFirstScrollableParent(elementRef.nativeElement);
+        if (firstScrollableParent !== this.DOMService.getNativeDocument().body) {
+            if (firstScrollableParent.scrollTo) {
+                firstScrollableParent.scrollTo(0, this.DOMService.getNativeDocument().body.scrollHeight);
+            } else {
+                // IE 11 - Edge browsers
+                firstScrollableParent.scrollTop = firstScrollableParent.scrollHeight - firstScrollableParent.clientHeight;
+            }
+        } else {
+            this.DOMService.getNativeWindow().scrollTo(0, this.DOMService.getNativeDocument().body.scrollHeight);
+        }
+    }
+
+    private getFirstScrollableParent(node: any) {
         const regex = /(auto|scroll|overlay)/;
 
         const style = (node: any, prop: any) =>
@@ -54,25 +142,6 @@ export class DocumentService {
         };
 
         return scrollparent(node);
-    }
-
-    getElementsFromPoint(x: number, y: number) {
-        this.DOMService.getNativeDocument().elementsFromPoint(x, y);
-    }
-
-    isElementBeyondOthers(elementRef: ElementRef, isElementFixed: boolean, keywordToDiscard: string) {
-        const x1 = isElementFixed ? this.getElementFixedLeft(elementRef) : this.getElementAbsoluteLeft(elementRef);
-        const y1 = isElementFixed ? this.getElementFixedTop(elementRef) : this.getElementAbsoluteTop(elementRef);
-        const x2 = x1 + elementRef.nativeElement.getBoundingClientRect().width - 1;
-        const y2 = y1 + elementRef.nativeElement.getBoundingClientRect().height - 1;
-
-        const elements1 = this.DOMService.getNativeDocument().elementsFromPoint(x1, y1);
-        const elements2 = this.DOMService.getNativeDocument().elementsFromPoint(x2, y2);
-
-        return (
-            this.getFirstElementWithoutKeyword(elements1, keywordToDiscard) !== elementRef.nativeElement ||
-            this.getFirstElementWithoutKeyword(elements2, keywordToDiscard) !== elementRef.nativeElement
-        );
     }
 
     private calculateDocumentHeight() {
@@ -103,6 +172,25 @@ export class DocumentService {
 
         // For browsers in Quirks mode
         return { x: docReference.body.scrollLeft, y: docReference.body.scrollTop };
+    }
+
+    private elementsFromPoint(x, y) {
+        var parents = [];
+        var parent = void 0;
+        do {
+            const elem = this.DOMService.getNativeDocument().elementFromPoint(x, y);
+            if (elem && parent !== elem) {
+                parent = elem;
+                parents.push(parent);
+                parent.style.pointerEvents = 'none';
+            } else {
+                parent = false;
+            }
+        } while (parent);
+        parents.forEach(function(parent) {
+            return (parent.style.pointerEvents = 'all');
+        });
+        return parents;
     }
 
     private getFirstElementWithoutKeyword(elements: Element[], keyword: string): Element {
