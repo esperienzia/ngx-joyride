@@ -116,9 +116,9 @@ export class JoyrideDirective implements AfterViewInit, OnChanges, OnDestroy {
         this.step.isElementOrAncestorFixed =
             this.isElementFixed(this.viewContainerRef.element) ||
             this.isAncestorsFixed(this.viewContainerRef.element.nativeElement.parentElement);
-        step.delayEmitter = this.delayEmitter;
-        step.startsHidden = this.startsHidden;
-        step.startsInvisible = this.startsHidden ? true : this.startsInvisible;
+        this.step.delayEmitter = this.delayEmitter;
+        this.step.startsHidden = this.startsHidden;
+        this.step.startsInvisible = this.startsHidden ? true : this.startsInvisible;
         this.joyrideStepsContainer.addStep(this.step);
     }
 
