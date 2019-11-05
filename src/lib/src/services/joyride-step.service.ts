@@ -36,7 +36,7 @@ export class JoyrideStepService implements IJoyrideStepService {
     constructor(
         private readonly backDropService: JoyrideBackdropService,
         private readonly eventListener: EventListenerService,
-        private readonly stepsContainerService: JoyrideStepsContainerService,
+        public stepsContainerService: JoyrideStepsContainerService,
         private readonly documentService: DocumentService,
         private readonly DOMService: DomRefService,
         private readonly stepDrawerService: StepDrawerService,

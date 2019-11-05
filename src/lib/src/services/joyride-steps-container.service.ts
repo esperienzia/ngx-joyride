@@ -19,7 +19,7 @@ export enum StepActionType {
 
 @Injectable()
 export class JoyrideStepsContainerService {
-    private steps: Step[];
+    steps: Step[];
     private tempSteps: JoyrideStep[] = [];
     private currentStepIndex: number = -2;
     stepHasBeenModified: Subject<JoyrideStep> = new Subject<JoyrideStep>();

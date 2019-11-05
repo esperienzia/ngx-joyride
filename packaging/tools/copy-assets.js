@@ -6,6 +6,6 @@ fs.copy(PATH_SRC + 'assets', PATH_DIST + 'assets')
     .then(() => {
         console.info("[PACKAGING]::: Copying assets.");
     })
-    .catch(() => {
+    .catch((err) => {
         if (err) return console.error(err)
     });
