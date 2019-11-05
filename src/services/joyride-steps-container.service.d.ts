@@ -2,6 +2,10 @@ import { JoyrideStep } from '../models/joyride-step.class';
 import { Subject } from 'rxjs';
 import { JoyrideOptionsService } from './joyride-options.service';
 import { LoggerService } from './logger.service';
+declare class Step {
+    id: string;
+    step: JoyrideStep;
+}
 export declare enum StepActionType {
     NEXT = "NEXT",
     PREV = "PREV"
@@ -9,7 +13,7 @@ export declare enum StepActionType {
 export declare class JoyrideStepsContainerService {
     private readonly stepOptions;
     private readonly logger;
-    private steps;
+    steps: Step[];
     private tempSteps;
     private currentStepIndex;
     stepHasBeenModified: Subject<JoyrideStep>;
@@ -25,3 +29,4 @@ export declare class JoyrideStepsContainerService {
     private getStepIndex;
     private getStepName;
 }
+export {};

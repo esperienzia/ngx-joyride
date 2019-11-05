@@ -20,7 +20,7 @@ export interface IJoyrideStepService {
 export declare class JoyrideStepService implements IJoyrideStepService {
     private readonly backDropService;
     private readonly eventListener;
-    private readonly stepsContainerService;
+    stepsContainerService: JoyrideStepsContainerService;
     private readonly documentService;
     private readonly DOMService;
     private readonly stepDrawerService;
