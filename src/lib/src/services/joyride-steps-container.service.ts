@@ -50,7 +50,7 @@ export class JoyrideStepsContainerService {
     addStep(stepToAdd: JoyrideStep) {
         let stepExist = this.tempSteps.filter(step => step.name === stepToAdd.name).length > 0;
         if (!stepExist) {
-            this.logger.info(`Adding step ${stepToAdd.name} to the steps list.`);
+            // this.logger.info(`Adding step ${stepToAdd.name} to the steps list.`);
             this.tempSteps.push(stepToAdd);
         } else {
             let stepIndexToReplace = this.tempSteps.findIndex(step => step.name === stepToAdd.name);
